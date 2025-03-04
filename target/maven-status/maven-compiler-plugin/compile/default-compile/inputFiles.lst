@@ -1,0 +1,3 @@
+/workspaces/flink-poc/src/main/java/com/example/TradeProcessor.java
+/workspaces/flink-poc/src/main/java/com/example/model/EnrichedTrade.java
+/workspaces/flink-poc/src/main/java/com/example/model/TradeEvent.java

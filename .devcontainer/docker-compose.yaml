@@ -6,7 +6,6 @@ services:
     command: sleep infinity
     volumes:
       - ..:/workspaces/flink-poc
-    user: flink
     networks:
       - flink-network
 
@@ -59,10 +58,13 @@ services:
       - "8081:8081"
     networks:
       - flink-network
+    volumes:
+      - ../src/main/resources/output:/usr/local/flink/resources/output
     environment:
       - |
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
+        taskmanager.numberOfTaskSlots: 3
 
   taskmanager:
     image: apache/flink:1.19-java17
@@ -72,13 +74,17 @@ services:
     networks:
       - flink-network
     command: taskmanager
+    volumes:
+      - ../src/main/resources/output:/usr/local/flink/resources/output
     environment:
       - |
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
+        taskmanager.numberOfTaskSlots: 3
 
 volumes:
   kafka_data:
 
 networks:
   flink-network:
+    driver: bridge

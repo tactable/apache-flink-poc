@@ -70,3 +70,7 @@ Flink can be [natively deployed to Kubernetes](https://nightlies.apache.org/flin
 Usually goes with Flink for Data Visualization
 
 https://zjffdu.medium.com/flink-on-zeppelin-part-1-get-started-2591aaa6aa47
+
+## Apache Kafka
+
+Whatever cannot be processed will be pushed back to Kafka

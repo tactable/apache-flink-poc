@@ -43,6 +43,5 @@
         8081, // Flink Web UI
         9092, // Kafka
         8080 // Kafka UI
-    ],
-    "remoteUser": "flink"
+    ]
 }
