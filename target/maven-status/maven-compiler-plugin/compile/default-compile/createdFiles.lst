@@ -1,3 +1,4 @@
 com/example/model/EnrichedTrade.class
 com/example/model/TradeEvent.class
 com/example/TradeProcessor.class
+com/example/TradeProcessor$1.class
