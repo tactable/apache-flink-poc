@@ -1,0 +1,48 @@
+{
+    "name": "Apache Flink POC",
+    "dockerComposeFile": "docker-compose.yaml",
+    "service": "app",
+    "runServices": [
+        "kafka",
+        "kafka-ui",
+        "jobmanager",
+        "taskmanager"
+    ],
+    "workspaceFolder": "/workspaces/flink-poc",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "vscjava.vscode-java-pack",
+                "redhat.java",
+                "vscjava.vscode-maven",
+                "vscjava.vscode-java-debug",
+                "vscjava.vscode-java-dependency",
+                "vscjava.vscode-java-test"
+            ],
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "terminal.integrated.profiles.linux": {
+                    "bash": {
+                        "path": "/bin/bash"
+                    }
+                }
+            }
+        }
+    },
+    "features": {
+        "ghcr.io/devcontainers-extra/features/maven-sdkman:2": {
+            "jdkVersion": "21",
+            "jdkDistribution": "open"
+        },
+        "ghcr.io/devcontainers-extra/features/flink-sdkman:2": {
+            "jdkVersion": "21",
+            "jdkDistribution": "open"
+        }
+    },
+    "forwardPorts": [
+        8081, // Flink Web UI
+        9092, // Kafka
+        8080 // Kafka UI
+    ],
+    "remoteUser": "flink"
+}
