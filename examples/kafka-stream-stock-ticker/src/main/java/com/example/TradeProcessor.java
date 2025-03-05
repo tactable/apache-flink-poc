@@ -49,7 +49,7 @@ public class TradeProcessor {
                 .build();
 
         // Create output directory if it doesn't exist
-        Path outputPath = new Path("/usr/local/flink/resources/output");
+        Path outputPath = new Path("/usr/local/flink/kafka-stream-stock-ticker/resources/output");
         // outputPath.getFileSystem().mkdirs(outputPath);
 
         // Configure FileSink with rolling policy

@@ -59,7 +59,7 @@ services:
     networks:
       - flink-network
     volumes:
-      - ../src/main/resources/output:/usr/local/flink/resources/output
+      - ../src/examples/kafka-stream-stock-ticker/output:/usr/local/flink/kafka-stream-stock-ticker/resources/output
     environment:
       - |
         FLINK_PROPERTIES=
@@ -75,7 +75,7 @@ services:
       - flink-network
     command: taskmanager
     volumes:
-      - ../src/main/resources/output:/usr/local/flink/resources/output
+      - ../src/examples/kafka-stream-stock-ticker/output:/usr/local/flink/kafka-stream-stock-ticker/resources/output
     environment:
       - |
         FLINK_PROPERTIES=
