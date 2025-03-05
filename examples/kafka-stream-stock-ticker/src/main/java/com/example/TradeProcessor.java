@@ -46,6 +46,7 @@ public class TradeProcessor {
                 // Other properties
                 .setProperty("enable.auto.commit", "true")
                 .setProperty("auto.commit.interval.ms", "1000")
+                .setProperty("scan.startup.mode", "earliest-offset")
                 .build();
 
         // Create output directory if it doesn't exist
