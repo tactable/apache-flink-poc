@@ -1,0 +1,11 @@
+line_item,total_amount,department,category,report_date
+rent,-3800.0,Deckow-Crist,EXPENSE,2025-03-05
+sales,6300.0,Johns Group,REVENUE,2025-03-05
+salary,9500.0,Keebler LLC,REVENUE,2025-03-05
+hardware,-1200.0,Keebler LLC,EXPENSE,2025-03-05
+software,-800.0,Considine-Lockman,EXPENSE,2025-03-05
+training,-1000.0,Yost and Sons,EXPENSE,2025-03-05
+marketing,-1500.0,Keebler LLC,EXPENSE,2025-03-05
+utilities,-500.0,Keebler LLC,EXPENSE,2025-03-05
+consulting,-2500.0,Romaguera-Jacobson,EXPENSE,2025-03-05
+

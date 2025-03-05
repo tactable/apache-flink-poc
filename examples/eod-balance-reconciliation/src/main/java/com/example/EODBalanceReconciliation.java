@@ -8,6 +8,7 @@ import com.example.service.EnrichmentService;
 
 import java.time.Duration;
 
+import org.apache.flink.api.common.RuntimeExecutionMode;
 import org.apache.flink.api.common.eventtime.SerializableTimestampAssigner;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.AggregateFunction;
@@ -44,8 +45,9 @@ public class EODBalanceReconciliation {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
         // Enable checkpointing to ensure all data is processed before job completion
-        env.enableCheckpointing(60 * 1000);
+        // env.enableCheckpointing(60 * 1000);
         env.setParallelism(3);
+        env.setRuntimeMode(RuntimeExecutionMode.BATCH);
         // Define input and output paths
         Path inputPath = new Path("/usr/local/flink/eod-balance-reconciliation/resources/input");
         Path outputPath = new Path("/usr/local/flink/eod-balance-reconciliation/resources/output");
@@ -53,7 +55,7 @@ public class EODBalanceReconciliation {
         // Create a file source to monitor the input directory
         FileSource<String> source = FileSource
                 .forRecordStreamFormat(new TextLineInputFormat(), inputPath)
-                .monitorContinuously(Duration.ofMinutes(1))
+                // .monitorContinuously(Duration.ofMinutes(1))
                 .build();
         
         // Create the data stream from the file source
