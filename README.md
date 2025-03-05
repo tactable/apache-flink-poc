@@ -65,12 +65,7 @@ There are 2 deployment models that can ensure Job Manager highly available.
 
 Flink can be [natively deployed to Kubernetes](https://nightlies.apache.org/flink/flink-docs-release-1.20/docs/deployment/resource-providers/native_kubernetes/) so it is recommended to use Kubernetes HA. Additionally, Flink also provides [Kubernetes Operator](https://nightlies.apache.org/flink/flink-kubernetes-operator-docs-release-1.11/docs/concepts/overview/) to manage Flink jobs on Kubernetes.
 
-## Apache Zeppelin
+## Examples
 
-Usually goes with Flink for Data Visualization
-
-https://zjffdu.medium.com/flink-on-zeppelin-part-1-get-started-2591aaa6aa47
-
-## Apache Kafka
-
-Whatever cannot be processed will be pushed back to Kafka
+- [Kafka Stream Stock Ticker](./examples/kafka-stream-stock-ticker)
+- [EOD Balance Reconciliation](./examples/eod-balance-reconciliation)
