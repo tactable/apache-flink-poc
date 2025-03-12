@@ -63,11 +63,12 @@ public class EODBalanceReconciliation {
                 source,
                 WatermarkStrategy.noWatermarks(),
                 "File Source"
-        );
+        ).uid("file-source");
         
         // Extract date from filename and parse CSV data
         DataStream<Transaction> transactions = inputStream
-                .filter(line -> !line.startsWith("transaction_id")) // Skip header
+                .filter(line -> !line.startsWith("transaction_id"))
+                .uid("filter-transaction-id") // Skip header
                 .map(new MapFunction<String, Transaction>() {
                     @Override
                     public Transaction map(String line) throws Exception {
@@ -85,7 +86,8 @@ public class EODBalanceReconciliation {
                                 fields[4].trim()                       // transaction_date
                         );
                     }
-                });
+                })
+                .uid("map-to-transaction");
 
         // Assign timestamps and watermarks based on transaction date
         DataStream<Transaction> timestampedTransactions = transactions
@@ -108,7 +110,7 @@ public class EODBalanceReconciliation {
                                 }
                             }
                         })
-                );
+                ).uid("assign-timestamps-and-watermarks");
 
         // Enrich transactions with additional data from external API
         EnrichmentService enrichmentService = new EnrichmentService();
@@ -118,7 +120,8 @@ public class EODBalanceReconciliation {
                     public EnrichedTransaction map(Transaction transaction) throws Exception {
                         return enrichmentService.enrichTransaction(transaction);
                     }
-                });
+                })
+                .uid("enrich-transaction");
         
         // Group by line item within each day and reduce
         DataStream<DailyReport> dailyReports = enrichedTransactions
@@ -144,6 +147,7 @@ public class EODBalanceReconciliation {
                         );
                     }
                 })
+                .uid("reduce-enriched-transaction")
                 .map(new MapFunction<EnrichedTransaction, DailyReport>() {
                     @Override
                     public DailyReport map(EnrichedTransaction transaction) throws Exception {
@@ -155,7 +159,8 @@ public class EODBalanceReconciliation {
                                 transaction.getTransactionDate()
                         );
                     }
-                });
+                })
+                .uid("map-to-daily-report");
         
         // Group by date and aggregate into a single ReconcileReport
         SingleOutputStreamOperator<ReconcileReport> reconcileReports = dailyReports
@@ -183,11 +188,13 @@ public class EODBalanceReconciliation {
                         a.getDailyReports().addAll(b.getDailyReports());
                         return a;
                     }
-                });
-        
+                })
+                .uid("aggregate-reconcile-report");
+
         // Convert ReconcileReport to String
         SingleOutputStreamOperator<String> csvReports = reconcileReports
-                .map(ReconcileReport::toCsv);
+                .map(ReconcileReport::toCsv)
+                .uid("map-to-csv");
         
         // Configure the file sink with a custom bucket assigner
         FileSink<String> sink = FileSink
@@ -220,7 +227,7 @@ public class EODBalanceReconciliation {
                 .build();
         
         // Write to sink
-        csvReports.sinkTo(sink);
+        csvReports.sinkTo(sink).uid("sink-file");
         
         // Execute the job
         env.execute("EOD Balance Reconciliation");

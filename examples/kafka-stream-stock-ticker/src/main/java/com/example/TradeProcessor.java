@@ -32,6 +32,7 @@ public class TradeProcessor {
         env.setParallelism(3);
         // Checkpointing every minute
         env.enableCheckpointing(60 * 1000);
+        
         // Create Kafka source
         KafkaSource<String> source = KafkaSource.<String>builder()
                 .setBootstrapServers("kafka:29092")
@@ -49,6 +50,7 @@ public class TradeProcessor {
                 .setProperty("scan.startup.mode", "earliest-offset")
                 .build();
 
+        
         // Create output directory if it doesn't exist
         Path outputPath = new Path("/usr/local/flink/kafka-stream-stock-ticker/resources/output");
         // outputPath.getFileSystem().mkdirs(outputPath);
@@ -91,7 +93,7 @@ public class TradeProcessor {
     
 
         // Process the stream
-        DataStream<String> stream = env.fromSource(source, WatermarkStrategy.noWatermarks(), "Kafka Source");
+        DataStream<String> stream = env.fromSource(source, WatermarkStrategy.noWatermarks(), "Kafka Source").uid("kafka-source-1");
         
         ObjectMapper mapper = new ObjectMapper();
 
@@ -99,14 +101,24 @@ public class TradeProcessor {
                 System.out.println("Processing trade: " + json);
                 return mapper.readValue(json, TradeEvent.class);
             })
+            .uid("proces-trade-1")
             .keyBy(trade -> trade.getSymbol())  
             .map(trade -> {
                 EnrichedTrade enrichedTrade = new EnrichedTrade(trade);
+                try {
+                    Thread.sleep(1 * 60 * 1000); // Sleep for 1 minutes
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException("Thread was interrupted", e);
+                }
                 System.out.println("Enriched trade: " + enrichedTrade);
                 return enrichedTrade;
             })
+            .uid("enriched-trade-1")
             .map(Object::toString)
-            .sinkTo(sink);
+            .uid("toString-1")
+            .sinkTo(sink)
+            .uid("sink-file-1");
 
         // Execute the job
         env.execute("Trade Processor");
